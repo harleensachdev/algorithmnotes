@@ -12,26 +12,41 @@
 </head>
 
  
- # Segment Trees
+## Segment Trees
 
-A segment tree is a data structure that stores information about array intervals in its nodes. This allows efficient answering of range queries and updates.
+A segment tree is a data structure that stores information about array intervals in its nodes. This allows efficient answering of range queries and updates. 
+
+Complexities(refer to figure below):
+Construction:
+N + 1/2N + 1/4N + 1/8N +... = O(N) -> efficient
+Modification / Updating:
+There are log2(N) rows and only one cell in each row is updated so O(log2(n))
+Query:
+Each sum will only affect log2(N) cells from bottom to top, so O(log2(N))
+
+
 
 - **Key Operations:** Build, Query, Update.
 
 ---
 
-## Classic Segment Trees
+# Classic Segment Trees
+Used for point updates (modifying a single element) and range queries (sum or max over a range)
+Update: updates a single element or range directly, recalculating affected parent nodes recursively 
+--> makes range updates time inefficient, as all affected nodes in range need to be updated
+Query: Answers range queries by combining contributions from relevant child nodes
+Basic structure: Each node represents a summary (eg: sum) of a segment of the array
 
 <figure style="text-align: center;">
   <img src="assets/diagrams/segment-tree-diagram.png" alt="Segment Tree Diagram" width="70%">
-  <figcaption>Figure 1: Example of a Segment Tree, each box is a node</figcaption>
+  <figcaption>Figure 1: Example of a Classic Segment Tree, each box is a node</figcaption>
 </figure>
 
 ---
 
 **Building a Classic Segment Tree in C++**
 Function to build a classic segment tree with a range of consecutive values
-```cpp
+<pre><code class="language-cpp">
 #include <iostream>
 using namespace std;
 
@@ -66,11 +81,11 @@ void build(int id, int le, int ri) {
         // Each node value is the sum of its two children
     }
 }
-```
+</code></pre>
 
 **Update a Classic Segment Tree in C++**
 Function to update/change a value in the segment tree and array
-```cpp
+<pre><code class="language-cpp">
 void update(int targetPosition, int value, int id, int le, int ri){
     // int targetPosition -> represents index of value to be changed in original array
     // int value -> represents value to be changed to 
@@ -100,10 +115,11 @@ void update(int targetPosition, int value, int id, int le, int ri){
         // Keeps segment tree consistent with all children nodes (taking changes into account)
     }
 }
-```
+</code></pre>
+
 **Query a Classic Segment Tree in C++**
 Function that finds the sum of values in a given range, traverses through segment tree to find this
-```cpp
+<pre><code class="language-cpp">
 int query(int targetLeft, int targetRight, int id, int le, int ri){
     //int targetLeft refers to the leftmost index in array you are interested in summing
     //int targetright refers to the rightmost index in array you are interested in summing
@@ -133,7 +149,7 @@ int query(int targetLeft, int targetRight, int id, int le, int ri){
     return leftChild + rightChild;
 
 }
-```
+</code></pre>
 
 
 ## Example Problem
@@ -163,7 +179,7 @@ Output:
 2
 11
 ### Code Implementation
-```cpp
+<pre><code class="language-cpp">
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -241,4 +257,85 @@ int main() {
     // however, in common language, positions are indexed from 1
     return 0;
 }
-```
+</code></pre>
+
+# Inverted Segment Trees
+Used for range updates and point queries 
+Range updates -> incrementing all elements in a range by 1 efficiently
+Point query -> find value at position 2 after range updates
+--> need to traverse up tree, summing contributions from all relevant nodes
+
+Update: adds or modifies value over a range without fully propagating the changes immediately
+--> because updates are just stored at higher-level nodes and are pushed down (lazily applied) only when needed FOR EFFICIENCY
+Query: retrieves a value at specific position by aggregating contributions from all ancestors of the position in the tree
+Structure: each node represents a "difference" or an "update" that has been applied to its segment
+
+**Build a Inverted Segment Tree**
+Same as building a Classic Segment Tree
+
+**Updating an Inverted Segment Tree**
+Function modifies values of range [targetleft, targetright] by adding value to all elements in a range(similar code to range query in classic segment tree)
+<pre><code class="language-cpp">
+void update(int targetLeft, int targetRight, int value, int id, int le, int ri) {
+    //int targetLeft refers to the leftmost index in array you are interested in updating
+    //int targetright refers to the rightmost index in array you are interested in updating
+    //int id refers to the current node, usually starts from 1, representing the entire array
+    // int le -> leftmost (least) value represented in segment tree
+    // int ri -> rightmost (greatest) value represented in segment tree
+    // Base case 1: if current segment is completely outside range
+    if (targetLeft > ri || targetRight < le) {
+        return; //no overlap with queried range
+        //ensures we ignores segments that are out of queried range
+    }
+    //Base case 2: if current segment is completely inside queried range
+    if (targetLeft <= le && ri <= targetRight) {
+        tree[id] += value; // Directly update node that covers full range we want to update
+        return; 
+    }
+    //Recursive case: where current segment partially overlaps the queried range, update the left and right children recursively
+    int mid = (le + ri) / 2;
+    // update the left child of current node
+    update(targetLeft, targetRight, value, id * 2, le, mid);
+     // The left child represents the range [le, mid], so we update this range, and has parent_id *2
+     // Update the right child of the current node (right subtree)
+    update(targetLeft, targetRight, value, id * 2 + 1, mid + 1, ri);
+    // The right child represents the range [mid+1, ri], so we update this range, id = (parent_id * 2) +1
+    //return sum of left and right child recursively for final sum
+    return leftChild + rightChild;
+
+    //NOTICE: LOWER MOST ROW IN INVERSE SEGMENT TREE NEVER GETS UPDATED, AS THIS IS INEFFICIENT, INSTEAD ALL HIGHER ANCESTORS ARE UPDATED. THIS REDUCES RANGE UPDATES TO O(LOG N) AS UPDATES AFFECT ONLY THE NODES REQUIRED TO REPRESENT RANGE
+}
+</code></pre>
+
+**Querying an Inverted Segment Tree**
+Point querying retrieves a value at a specific position (denoted by target position). Similar function to range updating in classic segment tree. 
+
+<pre><code class="language-cpp">
+int query(int targetPosition, int id, int le, int ri) {
+    // int targetPosition -> represents index of value to be queried in original array
+    // int value -> represents value to be queried to 
+    //int id refers to the current node, usually starts from 1, representing the entire array
+    // int le -> leftmost (least) value represented in segment tree
+    // int ri -> rightmost (greatest) value represented in segment tree
+    if (le == ri) { // Base case: when the current segment is a single element (leaf node - nodes of bottom row of segment tree diagram)
+        return tree[id]; // return value in current leafnode
+
+        // THIS ONLY HAPPENS WHEN WE REACH A LEAF NODE (BOTTOM ROW) IN SEGMENT TREE
+    }
+    int mid = (le + ri) / 2;// calculates the middle index of the current segment 
+    int current = tree[id]; // Current node's value
+    if (targetPosition <= mid) {
+        // if the index to be queried lies in the left half of segment
+        current += query(targetPosition, id * 2, le, mid); 
+        // recursively query left child and its subbranches (eventually)
+        // Left child have id = 2 * parent_id, range: [le, mid]
+        
+    } else {
+        current += query(targetPosition, id * 2 + 1, mid + 1, ri); // recursively query right child and its subbranches (eventually)
+        // Right subbranches have id = (2 * parent_id) + 1, range: [mid, ri]
+    }
+    return current;
+    // IN INVERSE TREE STRUCTURE, UNLIKE CLASSIC TREE STRUCTURE, FINAL VALUE IS NOT JUST STORED IN BOTTOM ROW (LEAF NODES), THOSE VALUES ARE ALL TYPICALLY ZERO. THE TRUE VALUE OF THOSE LEAF NODES ARE EQUAL TO THE AGGREGATE VALUE OF ALL OF ITS ANCESTORS. THIS AVOIDS REDUNDANT OPERATIONS, SUCH AS UPDATING ALL BOTTOM ROW VALUES
+}
+
+</code></pre>
