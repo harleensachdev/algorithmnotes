@@ -1,7 +1,6 @@
-<head>
+ <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">s
     <!-- Prism.js CSS for syntax highlighting -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     
@@ -12,8 +11,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
 </head>
 
-
-## Segment Trees
+ 
+ # Segment Trees
 
 A segment tree is a data structure that stores information about array intervals in its nodes. This allows efficient answering of range queries and updates.
 
@@ -43,19 +42,30 @@ vector<int> tree;        // Segment tree is represented as a 1D vector (used due
 
 // Main function to build the segment tree
 void build(int id, int le, int ri) { 
+  // int le -> represents left most value in segment tree (in above diagram is 0)
+  // int ri -> represents right most value in segment tree (in above diagram is 16)
+  // int id -> above diagram, nodes are represented as 1:[0,16) -- 1 is the respective id 
     if (le == ri) { // Base case: if the current range is a single element
-        tree[id] = a[le]; // Store the corresponding value of a[le] in the tree node
-        // This occurs when the bottom row of the above diagram is reached
+        tree[id] = a[le]; // Store the value of a[le] in the tree node
+        // This occurs when the bottom row of the diagram is reached
     } else {
-        int mid = (le + ri) / 2; // Calculate the middle value of each interval (range)
-        build(id * 2, le, mid);  // Recursively builds the corresponding node on the left subbranch
-        // Left subbranches always have an id that is twice the main tree id, with a range from the left value to the mid value.
-        build(id * 2 + 1, mid + 1, ri); // Recursively builds the corresponding right subbranches
-        // Right subbranches always have an id that is one more than twice the main tree id, with a range from the mid value to the right value.
-        tree[id] = tree[id * 2] + tree[id * 2 + 1]; // Builds the current node
-        // This occurs for rows between the first row and the last row; each node has a value equivalent to the sum of its two subbranches.
+        int mid = (le + ri) / 2; // Calculate the middle value of the current range
+
+        // Build the left subbranch
+        build(id * 2, le, mid);  // Recursively build the left node
+        // Left subbranches have id = 2 * parent_id, range: [le, mid]
+
+        // Build the right subbranch
+        build(id * 2 + 1, mid + 1, ri); // Recursively build the right node
+        // Right subbranches have id = 2 * parent_id + 1, range: [mid+1, ri]
+
+        // Combine the results from the left and right subbranches
+        tree[id] = tree[id * 2] + tree[id * 2 + 1]; 
+        // Each node value is the sum of its two children
     }
 }
+
+
 ```
 
 ## Example Problem
