@@ -5,29 +5,32 @@ A segment tree is a data structure that stores information about array intervals
 # Building a segment tree
 <figure style="text-align: center;">
   <img src="assets/diagrams/segment-tree-diagram.png" alt="Segment Tree Diagram" width="70%">
-  <figcaption>Figure 1: Example of a Segment Tree</figcaption>
-  ```html
+  <figcaption>Figure 1: Example of a Segment Tree, each box is a node</figcaption>
+</figure>
 
-**Building a segment tree in C++**
+**Building a segment tree in C++ TEMPLATE**
 <pre><code class="language-cpp">
 #include <iostream>
 using namespace std;
+// Constants
+const int mxn = 2e5 + 5; // Maximum size of the array - 2x10^5 is typically sufficient
+int a[mxn]; // Array to hold input values -> values will be arranged in the tree
+vector<int> tree; // Segment treee is represented as a 1D vector (used due to its dynamic nature and ability to change size depending on input) 
 
-const int mxn = 2e5 + 5;
-int a[mxn];
-vector<int> tree;
-
+//Main function to build segment tree
 void build(int id, int le, int ri) { 
-    if (le == ri) {
-        tree[id] = a[le];
+    if (le == ri) { // Base case: if the current range is a single element
+        tree[id] = a[le]; // Store the corresponding value of a[le] in the tree node, this occurs when bottom row of above diagram is reached 
     } else {
-        int mid = (le + ri) / 2;
-        build(id * 2, le, mid);
-        build(id * 2 + 1, mid + 1, ri);
+        int mid = (le + ri) / 2; // Calculates the middle value of each interval (range)
+        build(id * 2, le, mid); //Recursively builds the corresponding node on left subbranch, left subbranches always has an id that is twice the main tree id, with a range from the left value to mid value. 
+        build(id * 2 + 1, mid + 1, ri); //Recursively builds the corresponding right subbranches, right subbranchesalways has an id that is one more than twice the main tree id, with a range from the mid value to right value. 
+        tree[id] = tree[id * 2] + tree[id * 2 + 1]; // Builds current node - this occurs for rows between the first row and last row, each node has a value equivalent to the sum of its two subbranches.
     }
 }
 </code></pre>
-</figure>
+
+
 
 
 ## Example Problem
