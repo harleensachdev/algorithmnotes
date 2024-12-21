@@ -1,4 +1,19 @@
- # Segment Trees
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Prism.js CSS for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    
+    <!-- Prism.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    
+    <!-- Prism.js language support for C++ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+</head>
+
+
+## Segment Trees
 
 A segment tree is a data structure that stores information about array intervals in its nodes. This allows efficient answering of range queries and updates.
 
@@ -15,7 +30,7 @@ A segment tree is a data structure that stores information about array intervals
 
 ---
 
-### **Building a Segment Tree in C++**
+**Building a Classic Segment Tree in C++**
 
 ```cpp
 #include <iostream>
@@ -41,7 +56,7 @@ void build(int id, int le, int ri) {
         // This occurs for rows between the first row and the last row; each node has a value equivalent to the sum of its two subbranches.
     }
 }
-
+```
 
 ## Example Problem
 Given an array, find the sum of elements in a range and update values efficiently.
