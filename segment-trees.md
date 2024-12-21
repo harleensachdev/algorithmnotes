@@ -46,7 +46,7 @@ Basic structure: Each node represents a summary (eg: sum) of a segment of the ar
 
 **Building a Classic Segment Tree in C++**
 Function to build a classic segment tree with a range of consecutive values
-<pre><code class="language-cpp">
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -81,12 +81,12 @@ void build(int id, int le, int ri) {
         // Each node value is the sum of its two children
     }
 }
-end.</code></pre>
+```
 
 
 **Update a Classic Segment Tree in C++**
 Function to update/change a value in the segment tree and array
-<pre><code class="language-cpp">
+```cpp
 void update(int targetPosition, int value, int id, int le, int ri){
     // int targetPosition -> represents index of value to be changed in original array
     // int value -> represents value to be changed to 
@@ -116,11 +116,11 @@ void update(int targetPosition, int value, int id, int le, int ri){
         // Keeps segment tree consistent with all children nodes (taking changes into account)
     }
 }
-end.</code></pre>
+```
 
 **Query a Classic Segment Tree in C++**
 Function that finds the sum of values in a given range, traverses through segment tree to find this
-<pre><code class="language-cpp">
+```cpp
 int query(int targetLeft, int targetRight, int id, int le, int ri){
     //int targetLeft refers to the leftmost index in array you are interested in summing
     //int targetright refers to the rightmost index in array you are interested in summing
@@ -150,7 +150,7 @@ int query(int targetLeft, int targetRight, int id, int le, int ri){
     return leftChild + rightChild;
 
 }
-end.</code></pre>
+```
 
 
 ## Example Problem
@@ -180,7 +180,7 @@ Output:
 2
 11
 ### Code Implementation
-<pre><code class="language-cpp">
+```cpp
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -258,7 +258,7 @@ int main() {
     // however, in common language, positions are indexed from 1
     return 0;
 }
-end.</code></pre>
+```
 
 # Inverted Segment Trees
 Used for range updates and point queries 
@@ -276,7 +276,7 @@ Same as building a Classic Segment Tree
 
 **Updating an Inverted Segment Tree**
 Function modifies values of range [targetleft, targetright] by adding value to all elements in a range(similar code to range query in classic segment tree)
-<pre><code class="language-cpp">
+``` cpp
 void update(int targetLeft, int targetRight, int value, int id, int le, int ri) {
     //int targetLeft refers to the leftmost index in array you are interested in updating
     //int targetright refers to the rightmost index in array you are interested in updating
@@ -306,12 +306,12 @@ void update(int targetLeft, int targetRight, int value, int id, int le, int ri) 
 
     //NOTICE: LOWER MOST ROW IN INVERSE SEGMENT TREE NEVER GETS UPDATED, AS THIS IS INEFFICIENT, INSTEAD ALL HIGHER ANCESTORS ARE UPDATED. THIS REDUCES RANGE UPDATES TO O(LOG N) AS UPDATES AFFECT ONLY THE NODES REQUIRED TO REPRESENT RANGE
 }
-end.</code></pre>
+```
 
 **Querying an Inverted Segment Tree**
 Point querying retrieves a value at a specific position (denoted by target position). Similar function to range updating in classic segment tree. 
 
-<pre><code class="language-cpp">
+```cpp
 int query(int targetPosition, int id, int le, int ri) {
     // int targetPosition -> represents index of value to be queried in original array
     // int value -> represents value to be queried to 
@@ -339,4 +339,4 @@ int query(int targetPosition, int id, int le, int ri) {
     // IN INVERSE TREE STRUCTURE, UNLIKE CLASSIC TREE STRUCTURE, FINAL VALUE IS NOT JUST STORED IN BOTTOM ROW (LEAF NODES), THOSE VALUES ARE ALL TYPICALLY ZERO. THE TRUE VALUE OF THOSE LEAF NODES ARE EQUAL TO THE AGGREGATE VALUE OF ALL OF ITS ANCESTORS. THIS AVOIDS REDUNDANT OPERATIONS, SUCH AS UPDATING ALL BOTTOM ROW VALUES
 }
 
-end.</code></pre>
+```
