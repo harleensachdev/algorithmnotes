@@ -30,7 +30,7 @@ A segment tree is a data structure that stores information about array intervals
 ---
 
 **Building a Classic Segment Tree in C++**
-
+Function to build a classic segment tree with a range of consecutive values
 ```cpp
 #include <iostream>
 using namespace std;
@@ -38,7 +38,8 @@ using namespace std;
 // Constants
 const int mxn = 2e5 + 5; // Maximum size of the array - 2x10^5 is typically sufficient
 int a[mxn];              // Array to hold input values -> values will be arranged in the tree
-vector<int> tree;        // Segment tree is represented as a 1D vector (used due to its dynamic nature and ability to change size depending on input)
+vector<int> tree;        // Segment tree is represented as a 1D vector 
+// (vector used due to its dynamic nature and ability to change size depending on input)
 
 // Main function to build the segment tree
 void build(int id, int le, int ri) { 
@@ -64,8 +65,40 @@ void build(int id, int le, int ri) {
         // Each node value is the sum of its two children
     }
 }
+```
 
+**Update a Classic Segment Tree in C++**
+Function to update/change a value in the segment tree and array
+```cpp
+void update(int targetPosition, int value, int id, int le, int ri){
+    // int targetPosition -> represents index of value to be changed in original array
+    // int value -> represents value to be changed to 
+    // int id -> id of value to be changed in segment tree
+    // int le -> leftmost (least) value represented in segment tree
+    // int ri -> rightmost (greatest) value represented in segment tree
 
+    if(le == ri){ // Base case: when the current segment is a single element (leaf node - nodes of bottom row of segment tree diagram)
+        a[targetPosition] = value; // Update original array (declared above) with value
+        tree[id] = value; // Update current leaf node with value
+        return;
+        // THIS ONLY HAPPENS WHEN WE REACH A LEAF NODE (BOTTOM ROW) IN SEGMENT TREE
+    } else{
+        int mid = (le + ri)/2; // calculates the middle index of the current segment 
+        if(targetPosition<=mid){
+          // if the index to be updated lies in the left half of segment
+          update(targetPosition, value, id*2, le, mid); // recursively update left segment and its subbranches (eventually)
+          // Left subbranches have id = 2 * parent_id, range: [le, mid]
+        } else {
+          // otherwise, index to be updated lies in the right half of segment
+          update(targetPosition, value, id*2+1, mid+1, ri);// recursively update right segment and its subbranches (eventually)
+          // Right subbranches have id = (2 * parent_id) + 1, range: [mid, ri]
+        }
+        // After calculating branching nodes, recalculate parent/current node
+        tree[id] = tree[id * 2] + tree[id * 2 + 1] ;
+        // Parent node is update to sum of 2 children nodes
+        // Keeps segment tree consistent with all children nodes (taking changes into account)
+    }
+}
 ```
 
 ## Example Problem
