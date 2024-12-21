@@ -4,7 +4,7 @@ A segment tree is a data structure that stores information about array intervals
 
 # Building a segment tree
 <figure style="text-align: center;">
-  <img src="segment-tree-diagram.png" alt="Segment Tree Diagram" width="50%">
+  <img src="segment-tree-diagram.png" alt="Segment Tree Diagram" width="70%">
   <figcaption>Figure 1: Example of a Segment Tree</figcaption>
 </figure>
 
