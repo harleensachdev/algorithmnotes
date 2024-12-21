@@ -6,6 +6,25 @@ A segment tree is a data structure that stores information about array intervals
 <figure style="text-align: center;">
   <img src="assets/diagrams/segment-tree-diagram.png" alt="Segment Tree Diagram" width="50%">
   <figcaption>Figure 1: Example of a Segment Tree</figcaption>
+  ```html
+<pre><code class="language-cpp">
+#include <iostream>
+using namespace std;
+
+const int mxn = 2e5 + 5;
+int a[mxn];
+vector<int> tree;
+
+void build(int id, int le, int ri) { 
+    if (le == ri) {
+        tree[id] = a[le];
+    } else {
+        int mid = (le + ri) / 2;
+        build(id * 2, le, mid);
+        build(id * 2 + 1, mid + 1, ri);
+    }
+}
+</code></pre>
 </figure>
 
 
