@@ -81,7 +81,8 @@ void build(int id, int le, int ri) {
         // Each node value is the sum of its two children
     }
 }
-</code></pre>
+end.</code></pre>
+
 
 **Update a Classic Segment Tree in C++**
 Function to update/change a value in the segment tree and array
@@ -115,7 +116,7 @@ void update(int targetPosition, int value, int id, int le, int ri){
         // Keeps segment tree consistent with all children nodes (taking changes into account)
     }
 }
-</code></pre>
+end.</code></pre>
 
 **Query a Classic Segment Tree in C++**
 Function that finds the sum of values in a given range, traverses through segment tree to find this
@@ -149,7 +150,7 @@ int query(int targetLeft, int targetRight, int id, int le, int ri){
     return leftChild + rightChild;
 
 }
-</code></pre>
+end.</code></pre>
 
 
 ## Example Problem
@@ -257,7 +258,7 @@ int main() {
     // however, in common language, positions are indexed from 1
     return 0;
 }
-</code></pre>
+end.</code></pre>
 
 # Inverted Segment Trees
 Used for range updates and point queries 
@@ -305,7 +306,7 @@ void update(int targetLeft, int targetRight, int value, int id, int le, int ri) 
 
     //NOTICE: LOWER MOST ROW IN INVERSE SEGMENT TREE NEVER GETS UPDATED, AS THIS IS INEFFICIENT, INSTEAD ALL HIGHER ANCESTORS ARE UPDATED. THIS REDUCES RANGE UPDATES TO O(LOG N) AS UPDATES AFFECT ONLY THE NODES REQUIRED TO REPRESENT RANGE
 }
-</code></pre>
+end.</code></pre>
 
 **Querying an Inverted Segment Tree**
 Point querying retrieves a value at a specific position (denoted by target position). Similar function to range updating in classic segment tree. 
@@ -338,4 +339,4 @@ int query(int targetPosition, int id, int le, int ri) {
     // IN INVERSE TREE STRUCTURE, UNLIKE CLASSIC TREE STRUCTURE, FINAL VALUE IS NOT JUST STORED IN BOTTOM ROW (LEAF NODES), THOSE VALUES ARE ALL TYPICALLY ZERO. THE TRUE VALUE OF THOSE LEAF NODES ARE EQUAL TO THE AGGREGATE VALUE OF ALL OF ITS ANCESTORS. THIS AVOIDS REDUNDANT OPERATIONS, SUCH AS UPDATING ALL BOTTOM ROW VALUES
 }
 
-</code></pre>
+end.</code></pre>
