@@ -8,3 +8,4 @@ Welcome to my collection of coding algorithms! Click on the links below to learn
 - [Binary Exponential](binary-exponential.md)
 - [Matrix Exponential](matrix-eponential.md)
 - [Binary Search](binary-search.md)
+- [Sorting](sorting.md)
